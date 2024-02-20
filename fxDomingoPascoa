@@ -1,6 +1,5 @@
 let
     Fonte = let
-
     funcao = 
     // ------------------------------------------------------------------- INICIO DA FUNCAO -------------------------------------------------------------------
 
@@ -9,14 +8,12 @@ let
         ) =>
 
         let
-
             DivInteira19 = Number.IntegerDivide(Ano, 19),
 
             Resto = Number.Mod(Ano, 19),
 
             Segredos = 
                 #table(
-
                     // titulos
                     {"NumDourado", "MMDD_Dourado"},
                     
@@ -59,10 +56,7 @@ let
                     each Date.DayOfWeek(_) = 0
                 )
                 {0} // selecionando só o conteudo
-
-
         in
-
             DomingoPascoa
 
     // ------------------------------------------------------------------- FIM DA FUNCAO -------------------------------------------------------------------
@@ -87,7 +81,6 @@ let
                         12/04/2020
                     "
                 ]
-
             }
         ]
 
