@@ -1,0 +1,103 @@
+let
+    Fonte = let
+
+    funcao = 
+    // ------------------------------------------------------------------- INICIO DA FUNCAO -------------------------------------------------------------------
+
+        (
+            Ano as number
+        ) =>
+
+        let
+
+            DivInteira19 = Number.IntegerDivide(Ano, 19),
+
+            Resto = Number.Mod(Ano, 19),
+
+            Segredos = 
+                #table(
+
+                    // titulos
+                    {"NumDourado", "MMDD_Dourado"},
+                    
+                    // conteúdo
+                    {
+                        { 1, "0414"},
+                        { 2, "0403"},
+                        { 3, "0323"},
+                        { 4, "0411"},
+                        { 5, "0331"},
+                        { 6, "0418"},
+                        { 7, "0408"},
+                        { 8, "0328"},
+                        { 9, "0416"},
+                        {10, "0405"},
+                        {11, "0325"},
+                        {12, "0413"},
+                        {13, "0402"},
+                        {14, "0322"},
+                        {15, "0410"},
+                        {16, "0330"},
+                        {17, "0417"},
+                        {18, "0407"},
+                        {19, "0327"}
+                    }
+                ),
+                
+            DataDourada = Segredos[MMDD_Dourado]{Resto},
+
+            OitoDiasAposDataDourada = 
+                List.Dates(
+                    Date.From(Text.From(Ano) & DataDourada)+ #duration(1,0,0,0),
+                    8,
+                    #duration(1,0,0,0)
+                ),
+
+            DomingoPascoa = 
+                List.Select(
+                    OitoDiasAposDataDourada,
+                    each Date.DayOfWeek(_) = 0
+                )
+                {0} // selecionando só o conteudo
+
+
+        in
+
+            DomingoPascoa
+
+    // ------------------------------------------------------------------- FIM DA FUNCAO -------------------------------------------------------------------
+
+        , metadados = [
+            Documentation.Name  = "DomingoPascoa",
+            Documentation.Description = "
+                by Joviano Silveira (www.joviano.com)
+                Para descobrir qual o domingo de páscoa no ano, basta inserir o numero do ano, e esta fórmula retorna a data.
+                ",
+            
+            Documentation.Examples = {
+
+                // exemplo 01
+                [
+                    Description = "Descobrindo domingo de páscoa no ano",
+                    Code = "            
+                        DomingoPascoa(2020)
+
+                    ",
+                    Result = "
+                        12/04/2020
+                    "
+                ]
+
+            }
+        ]
+
+in
+
+    Value.ReplaceType(
+        funcao,
+        Value.ReplaceMetadata(
+            Value.Type(funcao),metadados
+        )
+    )
+in
+    Fonte
