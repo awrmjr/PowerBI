@@ -6,11 +6,10 @@ let
     script = Text.FromBinary(GIT),
 
     // executando
-    run = Expression.Evaluate(script /*, #shared*/) 
+    run = Expression.Evaluate(script, #shared) 
     /* 
     para o PowerBI não pode por o #shared
     se colocar vai funcionar no Backend, mas quando carregar o modelo, vai dar erro.
     */
-
 in
     run
