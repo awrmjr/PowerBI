@@ -1,10 +1,7 @@
 let
     Fonte = let
-
     funcao = 
     // ------------------------------------------------------------------- INICIO DA FUNCAO -------------------------------------------------------------------
-
-
         (
             AnoInicial as number,
             AnoFinal as number
@@ -33,7 +30,6 @@ let
                 ",
             
             Documentation.Examples = {
-
                 // exemplo 01
                 [
                     Description = "Feriados dependentes da páscoa nos anos 2019 e 2020",
@@ -53,12 +49,10 @@ let
                         corpus christi      | 11/06/2020
                     "
                 ]
-
             }
         ]
 
 in
-
     Value.ReplaceType(
         funcao,
         Value.ReplaceMetadata(
