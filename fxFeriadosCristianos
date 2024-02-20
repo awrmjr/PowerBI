@@ -1,0 +1,69 @@
+let
+    Fonte = let
+
+    funcao = 
+    // ------------------------------------------------------------------- INICIO DA FUNCAO -------------------------------------------------------------------
+
+
+        (
+            AnoInicial as number,
+            AnoFinal as number
+        )=>
+
+        let
+            Fonte = {AnoInicial..AnoFinal},
+            #"Convertido para Tabela" = Table.FromList(Fonte, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+            #"Personalização Adicionada" = Table.AddColumn(#"Convertido para Tabela", "DomingoPascoa", each fxDomingoPascoa([Column1])),
+            #"Personalização Adicionada1" = Table.AddColumn(#"Personalização Adicionada", "SextaFeiraSanta", each [DomingoPascoa] - #duration(2,0,0,0)),
+            #"Personalização Adicionada2" = Table.AddColumn(#"Personalização Adicionada1", "Carnaval", each [DomingoPascoa] - #duration(40,0,0,0)),
+            #"Personalização Adicionada3" = Table.AddColumn(#"Personalização Adicionada2", "corpus christi", each [DomingoPascoa] + #duration(60,0,0,0)),
+            #"Colunas Removidas" = Table.RemoveColumns(#"Personalização Adicionada3",{"Column1"}),
+            #"Colunas Não Dinâmicas" = Table.UnpivotOtherColumns(#"Colunas Removidas", {}, "Tipo", "Data"),
+            #"Tipo Alterado" = Table.TransformColumnTypes(#"Colunas Não Dinâmicas",{{"Data", type date}})
+        in
+            #"Tipo Alterado"
+
+    // ------------------------------------------------------------------- FIM DA FUNCAO -------------------------------------------------------------------
+
+        , metadados = [
+            Documentation.Name  = "FeriadosCristianos",
+            Documentation.Description = "
+                by Joviano Silveira (www.joviano.com)
+                Insira como parametros o numero do ano inicial e do final, e retornará uma tabela com as datas de feriados dependentes da páscoa.
+                ",
+            
+            Documentation.Examples = {
+
+                // exemplo 01
+                [
+                    Description = "Feriados dependentes da páscoa nos anos 2019 e 2020",
+                    Code = "            
+                        FeriadosCristianos(2019,2020)
+
+                    ",
+                    Result = "
+                        Tipo                | Data
+                        DomingoPascoa       | 21/04/2019
+                        SextaFeiraSanta     | 19/04/2019
+                        Carnaval            | 12/03/2019
+                        corpus christi      | 20/06/2019
+                        DomingoPascoa       | 12/04/2020
+                        SextaFeiraSanta     | 10/04/2020
+                        Carnaval            | 03/03/2020
+                        corpus christi      | 11/06/2020
+                    "
+                ]
+
+            }
+        ]
+
+in
+
+    Value.ReplaceType(
+        funcao,
+        Value.ReplaceMetadata(
+            Value.Type(funcao),metadados
+        )
+    )
+in
+    Fonte
