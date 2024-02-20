@@ -7,9 +7,6 @@ let
 
     // executando
     run = Expression.Evaluate(script, #shared) 
-    /* 
-    para o PowerBI não pode por o #shared
-    se colocar vai funcionar no Backend, mas quando carregar o modelo, vai dar erro.
-    */
+
 in
     run
