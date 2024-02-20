@@ -12,16 +12,16 @@ let
 
         let
             Fonte = {AnoInicial..AnoFinal},
-            #"Convertido para Tabela" = Table.FromList(Fonte, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
-            #"Personalização Adicionada" = Table.AddColumn(#"Convertido para Tabela", "DomingoPascoa", each fxDomingoPascoa([Column1])),
-            #"Personalização Adicionada1" = Table.AddColumn(#"Personalização Adicionada", "SextaFeiraSanta", each [DomingoPascoa] - #duration(2,0,0,0)),
-            #"Personalização Adicionada2" = Table.AddColumn(#"Personalização Adicionada1", "Carnaval", each [DomingoPascoa] - #duration(40,0,0,0)),
-            #"Personalização Adicionada3" = Table.AddColumn(#"Personalização Adicionada2", "corpus christi", each [DomingoPascoa] + #duration(60,0,0,0)),
-            #"Colunas Removidas" = Table.RemoveColumns(#"Personalização Adicionada3",{"Column1"}),
-            #"Colunas Não Dinâmicas" = Table.UnpivotOtherColumns(#"Colunas Removidas", {}, "Tipo", "Data"),
-            #"Tipo Alterado" = Table.TransformColumnTypes(#"Colunas Não Dinâmicas",{{"Data", type date}})
+            ConvertidoParaTabela = Table.FromList(Fonte, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+            PersonalizaçãoAdicionada = Table.AddColumn(ConvertidoParaTabela, "DomingoPascoa", each fxDomingoPascoa([Column1])),
+            PersonalizaçãoAdicionada1 = Table.AddColumn(PersonalizaçãoAdicionada, "SextaFeiraSanta", each [DomingoPascoa] - #duration(2,0,0,0)),
+            PersonalizaçãoAdicionada2 = Table.AddColumn(PersonalizaçãoAdicionada1, "Carnaval", each [DomingoPascoa] - #duration(40,0,0,0)),
+            PersonalizaçãoAdicionada3 = Table.AddColumn(PersonalizaçãoAdicionada2, "corpus christi", each [DomingoPascoa] + #duration(60,0,0,0)),
+            ColunasRemovidas = Table.RemoveColumns(PersonalizaçãoAdicionada3,{"Column1"}),
+            ColunasNaoDinâmicas = Table.UnpivotOtherColumns(ColunasRemovidas, {}, "Tipo", "Data"),
+            TipoAlterado = Table.TransformColumnTypes(ColunasNaoDinâmicas,{{"Data", type date}})
         in
-            #"Tipo Alterado"
+            TipoAlterado
 
     // ------------------------------------------------------------------- FIM DA FUNCAO -------------------------------------------------------------------
 
