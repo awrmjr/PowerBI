@@ -30,39 +30,39 @@ let
                     FeriadosMoveis = fxFeriadosCristianos(Date.Year(DataIni), Date.Year(DataFim)),
 
                     ColunasAributos = 
-                        Table.FromRecords({                            
+                        Table.FromRecords({
                             [
-                                DataSerial              = Number.From(Date.ToText(Data,"yyyyMMdd")),      
+                                DataSerial              = Number.From(Date.ToText(Data,"yyyyMMdd")),
 
-                                AnoNum                  = Date.Year(Data),                      
-                                AnoPrimeiroDia          = Date.StartOfYear(Data),     
+                                AnoNum                  = Date.Year(Data),
+                                AnoPrimeiroDia          = Date.StartOfYear(Data),
                                         
-                                MesNum                  = Date.Month(Data),                     
-                                MesPrimeiroDia          = Date.StartOfMonth(Data),             
-                                MesUltimoDia            = Date.EndOfMonth(Data),                
-                                AnoMesSerial            = Date.ToText(Data, "yyyy-MM"),         
-                                MesNumDias              = Date.DaysInMonth(Data),               
-                                MesNome                 = Date.MonthName(Data),                 
-                                MesNomeReduzido         = Text.Start(Date.MonthName(Data),3),    
-                                MesDescricao_Ano        = Text.Start(Date.MonthName(Data),3)&"-"&Text.End(Text.From(Date.Year(Data)),2),
+                                MesNum                  = Date.Month(Data),
+                                MesPrimeiroDia          = Date.StartOfMonth(Data),
+                                MesUltimoDia            = Date.EndOfMonth(Data),
+                                AnoMesSerial            = Date.ToText(Data, "yyyy-MM"),
+                                MesNumDias              = Date.DaysInMonth(Data),
+                                MesNome                 = Text.Proper(Date.MonthName(Data)),
+                                MesNomeReduzido         = Text.Proper(Text.Start(Date.MonthName(Data),3)),
+                                MesDescricao_Ano        = Text.Proper(Text.Start(Date.MonthName(Data),3)) & "-" & Text.End(Text.From(Date.Year(Data)),2),
                                 
-                                TrimestreDoAnoNum       = Date.QuarterOfYear(Data),             
-                                TrimestreDataFim        = Date.EndOfQuarter(Data),              
-                                AnoTrimNum              = Text.From(Date.Year(Data)) & "-" & Text.From(Date.QuarterOfYear(Data)), 
+                                TrimestreDoAnoNum       = Date.QuarterOfYear(Data),
+                                TrimestreDataFim        = Date.EndOfQuarter(Data),
+                                AnoTrimestreNum         = Text.From(Date.Year(Data)) & "-" & Text.From(Date.QuarterOfYear(Data)),
+                                Trimestre               = Text.From(Date.QuarterOfYear(Data)) & "º Tri ",
 
-                                SemanaDoAnoNum          = Date.WeekOfYear(Data),                
-                                SemanaDoMesNum          = Date.WeekOfMonth(Data),               
-                                SemanaDiaInicio         = Date.StartOfWeek(Data),               
-                                SemanaDiaFim            = Date.EndOfWeek(Data),  
+                                SemanaDoAnoNum          = Date.WeekOfYear(Data),
+                                SemanaDoMesNum          = Date.WeekOfMonth(Data),
+                                SemanaDiaInicio         = Date.StartOfWeek(Data),
+                                SemanaDiaFim            = Date.EndOfWeek(Data), 
 
-                                DiaNum                  = Date.Day(Data),                       
-                                DiaAno                  = Date.DayOfYear(Data),                                                       
+                                DiaNum                  = Date.Day(Data),
+                                DiaAno                  = Date.DayOfYear(Data),
                                 DiaSemanaNum            = Date.DayOfWeek(Data, Day.Sunday) +1,   
-                                DiaSemanaNome           = Date.DayOfWeekName(Data),             
-                                DiaSemanaNomeReduzido   = Text.Upper(Text.Start(Date.DayOfWeekName(Data),3)),
+                                DiaSemanaNome           = Text.Proper(Date.DayOfWeekName(Data)),
+                                DiaSemanaNomeReduzido   = Text.Proper(Text.Start(Date.DayOfWeekName(Data),3)),
                                 QuinzenaNum             = if Date.Day(Data) <= 15 then 1 else 2,
                                 DecendioNum             = 
-
                                         if Date.Day(Data) <= 10 then 1 
                                         else if Date.Day(Data) <= 20 then 2 
                                         else 3,
@@ -81,8 +81,8 @@ let
             ColunasRenomeadas = Table.RenameColumns(TabelaDatas,{{"Column1", "Data"}}),
             TipoAlterado = Table.TransformColumnTypes(ColunasRenomeadas,{{"Data", type date}}),
             PersonalizaçãoAdicionada = Table.AddColumn(TipoAlterado, "Atributos", each GerarAtributos([Data])),
-            AtributosExpandido = Table.ExpandTableColumn(PersonalizaçãoAdicionada, "Atributos", {"DataSerial", "AnoNum", "AnoPrimeiroDia", "MesNum", "MesPrimeiroDia", "MesUltimoDia", "AnoMesSerial", "MesNumDias", "MesNome", "MesNomeReduzido", "MesDescricao_Ano", "TrimestreDoAnoNum", "TrimestreDataFim", "AnoTrimNum", "SemanaDoAnoNum", "SemanaDoMesNum", "SemanaDiaInicio", "SemanaDiaFim", "DiaNum", "DiaAno", "DiaSemanaNum", "DiaSemanaNome", "DiaSemanaNomeReduzido", "QuinzenaNum", "DecendioNum", "EhFeriadoFixo", "EhFeriadoMovel"}, {"DataSerial", "AnoNum", "AnoPrimeiroDia", "MesNum", "MesPrimeiroDia", "MesUltimoDia", "AnoMesSerial", "MesNumDias", "MesNome", "MesNomeReduzido", "MesDescricao_Ano", "TrimestreDoAnoNum", "TrimestreDataFim", "AnoTrimNum", "SemanaDoAnoNum", "SemanaDoMesNum", "SemanaDiaInicio", "SemanaDiaFim", "DiaNum", "DiaAno", "DiaSemanaNum", "DiaSemanaNome", "DiaSemanaNomeReduzido", "QuinzenaNum", "DecendioNum", "EhFeriadoFixo", "EhFeriadoMovel"}),
-            TiposAlterados = Table.TransformColumnTypes(AtributosExpandido,{{"Data", type date}, {"DataSerial", Int64.Type}, {"AnoNum", Int64.Type}, {"AnoPrimeiroDia", type date}, {"MesNum", Int64.Type}, {"MesPrimeiroDia", type date}, {"MesUltimoDia", type date}, {"AnoMesSerial", type text}, {"MesNumDias", Int64.Type}, {"MesNome", type text}, {"MesNomeReduzido", type text}, {"MesDescricao_Ano", type text}, {"TrimestreDoAnoNum", Int64.Type}, {"TrimestreDataFim", type date}, {"AnoTrimNum", type text}, {"SemanaDoAnoNum", Int64.Type}, {"SemanaDoMesNum", Int64.Type}, {"SemanaDiaInicio", type date}, {"SemanaDiaFim", type date}, {"DiaNum", Int64.Type}, {"DiaAno", Int64.Type}, {"DiaSemanaNum", Int64.Type}, {"DiaSemanaNome", type text}, {"DiaSemanaNomeReduzido", type text}, {"QuinzenaNum", Int64.Type}, {"DecendioNum", Int64.Type}, {"EhFeriadoFixo", Text.Type}, {"EhFeriadoMovel", Text.Type} }),
+            AtributosExpandido = Table.ExpandTableColumn(PersonalizaçãoAdicionada, "Atributos", {"DataSerial", "AnoNum", "AnoPrimeiroDia", "MesNum", "MesPrimeiroDia", "MesUltimoDia", "AnoMesSerial", "MesNumDias", "MesNome", "MesNomeReduzido", "MesDescricao_Ano", "TrimestreDoAnoNum", "TrimestreDataFim", "AnoTrimestreNum", "Trimestre", "SemanaDoAnoNum", "SemanaDoMesNum", "SemanaDiaInicio", "SemanaDiaFim", "DiaNum", "DiaAno", "DiaSemanaNum", "DiaSemanaNome", "DiaSemanaNomeReduzido", "QuinzenaNum", "DecendioNum", "EhFeriadoFixo", "EhFeriadoMovel"}),
+            TiposAlterados = Table.TransformColumnTypes(AtributosExpandido,{{"Data", type date}, {"DataSerial", Int64.Type}, {"AnoNum", Int64.Type}, {"AnoPrimeiroDia", type date}, {"MesNum", Int64.Type}, {"MesPrimeiroDia", type date}, {"MesUltimoDia", type date}, {"AnoMesSerial", type text}, {"MesNumDias", Int64.Type}, {"MesNome", type text}, {"MesNomeReduzido", type text}, {"MesDescricao_Ano", type text}, {"TrimestreDoAnoNum", Int64.Type}, {"TrimestreDataFim", type date}, {"AnoTrimestreNum", type date}, {"Trimestre", type text}, {"SemanaDoAnoNum", Int64.Type}, {"SemanaDoMesNum", Int64.Type}, {"SemanaDiaInicio", type date}, {"SemanaDiaFim", type date}, {"DiaNum", Int64.Type}, {"DiaAno", Int64.Type}, {"DiaSemanaNum", Int64.Type}, {"DiaSemanaNome", type text}, {"DiaSemanaNomeReduzido", type text}, {"QuinzenaNum", Int64.Type}, {"DecendioNum", Int64.Type}, {"EhFeriadoFixo", Text.Type}, {"EhFeriadoMovel", Text.Type} }),
             DiaUtilNacional = Table.AddColumn(TiposAlterados, "DiaUtilNacional", each if [EhFeriadoFixo] = "N" and [EhFeriadoMovel] = "N" then 1 else 0, Int64.Type)
 
         in
